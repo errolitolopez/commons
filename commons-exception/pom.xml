@@ -10,11 +10,11 @@
         <version>0.2.0</version>
     </parent>
 
-    <artifactId>commons-security</artifactId>
+    <artifactId>commons-exception</artifactId>
     <packaging>jar</packaging>
 
-    <name>Commons Security</name>
-    <description>Signing, verification, and crypto utilities</description>
+    <name>Commons Exception</name>
+    <description>Exception factory utilities and base exception types</description>
 
     <dependencies>
         <dependency>
@@ -23,5 +23,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

@@ -13,9 +13,10 @@ Each module is **independently published** — pull only what you need.
 
 # Modules
 
-| Module                                 | Description                                  | Version                                                                                           |
-|----------------------------------------|----------------------------------------------|---------------------------------------------------------------------------------------------------|
-| [commons-security](./commons-security) | HMAC-SHA256 request signing and verification | ![Maven Central](https://img.shields.io/maven-central/v/io.github.uncaughterrol/commons-security) |
+| Module                                   | Description                                  | Version                                                                                            |
+|------------------------------------------|----------------------------------------------|----------------------------------------------------------------------------------------------------|
+| [commons-security](./commons-security)   | HMAC-SHA256 request signing and verification | ![Maven Central](https://img.shields.io/maven-central/v/io.github.uncaughterrol/commons-security)  |
+| [commons-exception](./commons-exception) | Standardized API exceptions & factory        | ![Maven Central](https://img.shields.io/maven-central/v/io.github.uncaughterrol/commons-exception) |
 
 > More modules coming soon.
 
@@ -34,12 +35,19 @@ Pick only the modules you need.
     <artifactId>commons-security</artifactId>
     <version>0.1.0</version>
 </dependency>
+
+<dependency>
+    <groupId>io.github.uncaughterrol</groupId>
+    <artifactId>commons-exception</artifactId>
+    <version>0.1.0</version>
+</dependency>
 ```
 
 ## Gradle
 
 ```gradle
 implementation 'io.github.uncaughterrol:commons-security:0.1.0'
+implementation 'io.github.uncaughterrol:commons-exception:0.1.0'
 ```
 
 ---
@@ -64,6 +72,25 @@ boolean valid = EncryptionUtils.verify(payload, signature, "my-secret-key");
 ```
 
 → [Full documentation](./commons-security/README.md)
+
+
+## commons-exception
+
+Standardized API exceptions & factory
+```
+// 404 Not Found
+throw ExceptionFactory.notFound("User", 42);
+
+// 409 Conflict
+throw ExceptionFactory.alreadyExists("User", "email", "john@example.com");
+
+// 500 Internal Error
+throw ExceptionFactory.internal("Connection failed", databaseError);
+
+```
+
+
+→ [Full documentation](./commons-exception/README.md)
 
 ---
 
