@@ -1,18 +1,16 @@
-package io.github.uncaughterrol.commons.exception;
+package io.github.uncaughterrol.commons.model;
 
 /**
  * Represents a single invalid parameter in an API request.
  *
- * <p>Typically used alongside {@link ApiException} to communicate which specific
- * fields or parameters failed validation and why. For example:
+ * <p>Typically used in validation errors to describe which field failed
+ * validation and the reason for the failure.
  *
  * <pre>{@code
  * List<InvalidParam> params = List.of(
  *     new InvalidParam("email", "must be a valid email address"),
  *     new InvalidParam("age", "must be greater than 0")
  * );
- *
- * throw new ApiException("Validation Failed", "Request contains invalid parameters", params);
  * }</pre>
  */
 public class InvalidParam {
@@ -57,12 +55,6 @@ public class InvalidParam {
         return message;
     }
 
-    /**
-     * Returns a string representation of this invalid parameter in the format
-     * {@code InvalidParam{name='email', message='must be a valid email address'}}.
-     *
-     * @return a human-readable string representation
-     */
     @Override
     public String toString() {
         return "InvalidParam{" +

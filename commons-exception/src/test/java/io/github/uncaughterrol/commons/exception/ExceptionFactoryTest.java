@@ -1,5 +1,6 @@
 package io.github.uncaughterrol.commons.exception;
 
+import io.github.uncaughterrol.commons.model.InvalidParam;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

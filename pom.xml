@@ -6,7 +6,7 @@
 
     <groupId>io.github.uncaughterrol</groupId>
     <artifactId>commons</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <packaging>pom</packaging>
 
     <name>Commons</name>
@@ -38,6 +38,7 @@
         <module>commons-security</module>
         <module>commons-bom</module>
         <module>commons-exception</module>
+        <module>commons-model</module>
     </modules>
 
     <properties>

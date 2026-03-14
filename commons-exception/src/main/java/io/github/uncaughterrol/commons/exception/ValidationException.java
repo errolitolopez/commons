@@ -1,5 +1,7 @@
 package io.github.uncaughterrol.commons.exception;
 
+import io.github.uncaughterrol.commons.model.InvalidParam;
+
 import java.util.Collection;
 
 /**

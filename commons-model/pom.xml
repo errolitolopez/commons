@@ -10,11 +10,14 @@
         <version>0.3.0</version>
     </parent>
 
-    <artifactId>commons-security</artifactId>
+    <artifactId>commons-model</artifactId>
     <packaging>jar</packaging>
 
-    <name>Commons Security</name>
-    <description>Signing, verification, and crypto utilities</description>
+    <name>Commons Model</name>
+    <description>
+        Shared domain models used across Commons modules, including standard API response structures and validation
+        parameter representations.
+    </description>
 
     <dependencies>
         <dependency>
