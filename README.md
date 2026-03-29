@@ -33,34 +33,34 @@ Pick only the modules you need.
 <dependency>
     <groupId>io.github.uncaughterrol</groupId>
     <artifactId>commons-security</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
 </dependency>
 
 <dependency>
     <groupId>io.github.uncaughterrol</groupId>
     <artifactId>commons-exception</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
 </dependency>
 
 <dependency>
     <groupId>io.github.uncaughterrol</groupId>
     <artifactId>commons-model</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
 </dependency>
 
 <dependency>
     <groupId>io.github.uncaughterrol</groupId>
     <artifactId>commons-utils</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
 </dependency>
 ```
 
 ## Gradle
 ```gradle
-implementation 'io.github.uncaughterrol:commons-security:0.4.0'
-implementation 'io.github.uncaughterrol:commons-exception:0.4.0'
-implementation 'io.github.uncaughterrol:commons-model:0.4.0'
-implementation 'io.github.uncaughterrol:commons-utils:0.4.0'
+implementation 'io.github.uncaughterrol:commons-security:0.5.0'
+implementation 'io.github.uncaughterrol:commons-exception:0.5.0'
+implementation 'io.github.uncaughterrol:commons-model:0.5.0'
+implementation 'io.github.uncaughterrol:commons-utils:0.5.0'
 ```
 
 ---

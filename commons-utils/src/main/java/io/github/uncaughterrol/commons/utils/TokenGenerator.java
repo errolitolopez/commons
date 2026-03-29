@@ -273,6 +273,124 @@ public final class TokenGenerator {
     }
 
     // -------------------------------------------------------------------------
+    // Secure bank account number  (use for masking, display, or reference generation)
+    // -------------------------------------------------------------------------
+
+    /**
+     * Generates a cryptographically secure bank account number of the default length (10)
+     * that satisfies the Luhn checksum algorithm.
+     *
+     * <p>Example:</p>
+     * <pre>
+     * secureBankAccountNumber() → "3827461052"
+     * </pre>
+     *
+     * @return a 10-digit secure numeric bank account number passing the Luhn check
+     */
+    public static String secureBankAccountNumber() {
+        return secureBankAccountNumber(10);
+    }
+
+    /**
+     * Generates a cryptographically secure bank account number of the specified length
+     * that satisfies the Luhn checksum algorithm.
+     *
+     * <p>The first digit is guaranteed to be non-zero (1–9). The last digit is the
+     * Luhn check digit, computed deterministically from the preceding digits.</p>
+     *
+     * <p>Example:</p>
+     * <pre>
+     * secureBankAccountNumber(12) → "483920174658"
+     * secureBankAccountNumber(7)  → throws IllegalArgumentException
+     * </pre>
+     *
+     * @param size the desired account number length; must be at least 8
+     * @return a Luhn-valid secure numeric bank account number of the given length
+     * @throws IllegalArgumentException if {@code size} is less than 8
+     */
+    public static String secureBankAccountNumber(int size) {
+        if (size < 8) throw new IllegalArgumentException("Bank account number size must be at least 8");
+        char[] buf = new char[size];
+        buf[0] = NUMERIC[1 + SECURE_RNG.nextInt(9)];
+        for (int i = 1; i < size - 1; i++) {
+            buf[i] = NUMERIC[SECURE_RNG.nextInt(NUMERIC.length)];
+        }
+        buf[size - 1] = (char) ('0' + luhnCheckDigit(new String(buf, 0, size - 1)));
+        return new String(buf);
+    }
+
+    /**
+     * Validates whether the given numeric string passes the Luhn checksum algorithm.
+     *
+     * <p>The Luhn algorithm is widely used to validate identification numbers such as
+     * credit card numbers, IMEI numbers, and similar account identifiers. It detects
+     * all single-digit errors and most transposition errors.</p>
+     *
+     * <p>Example:</p>
+     * <pre>
+     * isValidLuhn("4532015112830366") → true   // valid Visa test number
+     * isValidLuhn("1234567890")       → false  // invalid
+     * isValidLuhn("abc")              → throws IllegalArgumentException
+     * </pre>
+     *
+     * @param number a non-null, non-empty string of digits to validate
+     * @return {@code true} if {@code number} satisfies the Luhn check; {@code false} otherwise
+     * @throws IllegalArgumentException if {@code number} is null, empty, or contains non-digit characters
+     */
+    public static boolean isValidLuhn(String number) {
+        if (number == null || number.isEmpty())
+            throw new IllegalArgumentException("Number must not be null or empty");
+        for (char c : number.toCharArray()) {
+            if (c < '0' || c > '9')
+                throw new IllegalArgumentException("Number must contain only digits, got: '" + c + "'");
+        }
+        return luhnSum(number) % 10 == 0;
+    }
+
+    // -------------------------------------------------------------------------
+    // Luhn internals
+    // -------------------------------------------------------------------------
+
+    /**
+     * Computes the Luhn check digit for the given partial number (all digits except the last).
+     *
+     * <p>The check digit is the value that, when appended to {@code partial}, makes the
+     * full number pass the Luhn algorithm. It is always in the range {@code [0, 9]}.</p>
+     *
+     * @param partial a non-empty string of digits representing all but the final digit
+     * @return the check digit to append, as an {@code int} in {@code [0, 9]}
+     */
+    private static int luhnCheckDigit(String partial) {
+        int sum = luhnSum(partial + "0");
+        return (10 - (sum % 10)) % 10;
+    }
+
+    /**
+     * Computes the raw Luhn sum of the given digit string.
+     *
+     * <p>Starting from the rightmost digit and moving left, every second digit
+     * is doubled; if the doubled value exceeds 9, its digits are summed (equivalent
+     * to subtracting 9). All values are then accumulated.</p>
+     *
+     * @param number a non-empty string of digits
+     * @return the Luhn sum (not yet reduced modulo 10)
+     */
+    private static int luhnSum(String number) {
+        int sum = 0;
+        boolean doubleIt = false;
+        for (int i = number.length() - 1; i >= 0; i--) {
+            int digit = number.charAt(i) - '0';
+            if (doubleIt) {
+                digit *= 2;
+                if (digit > 9) digit -= 9;
+            }
+            sum += digit;
+            doubleIt = !doubleIt;
+        }
+        return sum;
+    }
+
+    // -------------------------------------------------------------------------
     // Composite key  (RNG-agnostic)
     // -------------------------------------------------------------------------
 

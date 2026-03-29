@@ -144,4 +144,83 @@ class TokenGeneratorTest {
     void compositeKey_shouldMatchExpectedPattern() {
         Assertions.assertTrue(TokenGenerator.compositeKey("abc", 99).matches(COMPOSITE_PATTERN));
     }
+
+    // -------------------------------------------------------------------------
+// secureBankAccountNumber
+// -------------------------------------------------------------------------
+
+    @Test
+    void secureBankAccountNumber_shouldReturnTenCharsByDefault() {
+        Assertions.assertEquals(10, TokenGenerator.secureBankAccountNumber().length());
+    }
+
+    @Test
+    void secureBankAccountNumber_shouldContainOnlyDigits() {
+        Assertions.assertTrue(TokenGenerator.secureBankAccountNumber().matches(NUMERIC_PATTERN));
+    }
+
+    @Test
+    void secureBankAccountNumber_shouldNotHaveLeadingZero() {
+        Assertions.assertNotEquals('0', TokenGenerator.secureBankAccountNumber().charAt(0));
+    }
+
+    @Test
+    void secureBankAccountNumber_shouldReturnCorrectLength() {
+        Assertions.assertEquals(12, TokenGenerator.secureBankAccountNumber(12).length());
+    }
+
+    @Test
+    void secureBankAccountNumber_shouldThrowIfSizeLessThanEight() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> TokenGenerator.secureBankAccountNumber(7));
+    }
+
+    @Test
+    void secureBankAccountNumber_shouldPassLuhnCheck() {
+        Assertions.assertTrue(TokenGenerator.isValidLuhn(TokenGenerator.secureBankAccountNumber()));
+    }
+
+    @Test
+    void secureBankAccountNumber_shouldPassLuhnCheckWithCustomSize() {
+        Assertions.assertTrue(TokenGenerator.isValidLuhn(TokenGenerator.secureBankAccountNumber(16)));
+    }
+
+    @Test
+    void isValidLuhn_shouldReturnTrueForKnownValidNumber() {
+        Assertions.assertTrue(TokenGenerator.isValidLuhn("4532015112830366"));
+    }
+
+    @Test
+    void isValidLuhn_shouldReturnFalseForInvalidNumber() {
+        Assertions.assertFalse(TokenGenerator.isValidLuhn("1234567890"));
+    }
+
+    @Test
+    void isValidLuhn_shouldReturnTrueForSingleZero() {
+        Assertions.assertTrue(TokenGenerator.isValidLuhn("0"));
+    }
+
+    @Test
+    void isValidLuhn_shouldReturnFalseWhenSingleDigitAlteredByOne() {
+        Assertions.assertFalse(TokenGenerator.isValidLuhn("4532015112830367"));
+    }
+
+    @Test
+    void isValidLuhn_shouldThrowOnNullInput() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> TokenGenerator.isValidLuhn(null));
+    }
+
+    @Test
+    void isValidLuhn_shouldThrowOnEmptyInput() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> TokenGenerator.isValidLuhn(""));
+    }
+
+    @Test
+    void isValidLuhn_shouldThrowOnNonDigitCharacter() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> TokenGenerator.isValidLuhn("4532-0151-1283-0366"));
+    }
+
+    @Test
+    void isValidLuhn_shouldThrowOnAlphabeticInput() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> TokenGenerator.isValidLuhn("abc"));
+    }
 }
