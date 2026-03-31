@@ -6,7 +6,7 @@
 
     <groupId>io.github.uncaughterrol</groupId>
     <artifactId>commons</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
     <packaging>pom</packaging>
 
     <name>Commons</name>

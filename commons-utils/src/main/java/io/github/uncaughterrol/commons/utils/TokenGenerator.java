@@ -320,6 +320,84 @@ public final class TokenGenerator {
     }
 
     /**
+     * Generates a cryptographically secure bank account number with a given prefix
+     * and total length, satisfying the Luhn checksum algorithm.
+     *
+     * <p>The prefix is prepended as-is. The remaining digits are randomly generated,
+     * with the last digit being the Luhn check digit.</p>
+     *
+     * <p>Example:</p>
+     * <pre>
+     * secureBankAccountNumber("1000", 10) → "1000384729"
+     * secureBankAccountNumber("2000", 20) → "20009374816253047865"
+     * secureBankAccountNumber("1000", 5)  → throws IllegalArgumentException
+     * secureBankAccountNumber("12AB", 10) → throws IllegalArgumentException
+     * </pre>
+     *
+     * @param prefix the numeric prefix to prepend; must be non-null, non-empty, and digits only
+     * @param size   the total desired length (prefix + random + check digit); must be at least 8
+     *               and strictly greater than the prefix length
+     * @return a Luhn-valid secure numeric bank account number of the given total length
+     * @throws IllegalArgumentException if {@code prefix} is null, empty, contains non-digit characters,
+     *                                  or if {@code size} is less than 8 or not greater than prefix length
+     */
+    public static String secureBankAccountNumber(String prefix, int size) {
+        if (prefix == null || prefix.isEmpty())
+            throw new IllegalArgumentException("Prefix must not be null or empty");
+        for (char c : prefix.toCharArray()) {
+            if (c < '0' || c > '9')
+                throw new IllegalArgumentException("Prefix must contain only digits, got: '" + c + "'");
+        }
+        if (size < 8)
+            throw new IllegalArgumentException("Bank account number size must be at least 8");
+        if (size <= prefix.length())
+            throw new IllegalArgumentException(
+                    "Size must be greater than prefix length (" + prefix.length() + ")");
+
+        char[] buf = new char[size];
+
+        // Copy prefix
+        for (int i = 0; i < prefix.length(); i++) {
+            buf[i] = prefix.charAt(i);
+        }
+
+        // Fill random digits (leave last slot for check digit)
+        for (int i = prefix.length(); i < size - 1; i++) {
+            buf[i] = NUMERIC[SECURE_RNG.nextInt(NUMERIC.length)];
+        }
+
+        // Compute and append Luhn check digit
+        buf[size - 1] = (char) ('0' + luhnCheckDigit(new String(buf, 0, size - 1)));
+
+        return new String(buf);
+    }
+
+    /**
+     * Generates a cryptographically secure bank account number with a given numeric prefix
+     * and total length, satisfying the Luhn checksum algorithm.
+     *
+     * <p>Convenience overload that accepts the prefix as a {@code long}.
+     * Delegates to {@link #secureBankAccountNumber(String, int)}.</p>
+     *
+     * <p>Example:</p>
+     * <pre>
+     * secureBankAccountNumber(1000L, 10) → "1000748362"
+     * secureBankAccountNumber(2000L, 20) → "20001847362958401736"
+     * </pre>
+     *
+     * @param prefix the numeric prefix to prepend; must be a positive value
+     * @param size   the total desired length; must be at least 8 and strictly greater than
+     *               the number of digits in {@code prefix}
+     * @return a Luhn-valid secure numeric bank account number of the given total length
+     * @throws IllegalArgumentException if {@code prefix} is not positive, or if size constraints are violated
+     */
+    public static String secureBankAccountNumber(long prefix, int size) {
+        if (prefix <= 0)
+            throw new IllegalArgumentException("Prefix must be a positive number");
+        return secureBankAccountNumber(Long.toString(prefix), size);
+    }
+
+    /**
      * Validates whether the given numeric string passes the Luhn checksum algorithm.
      *
      * <p>The Luhn algorithm is widely used to validate identification numbers such as

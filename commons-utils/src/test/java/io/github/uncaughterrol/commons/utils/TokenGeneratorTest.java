@@ -145,10 +145,6 @@ class TokenGeneratorTest {
         Assertions.assertTrue(TokenGenerator.compositeKey("abc", 99).matches(COMPOSITE_PATTERN));
     }
 
-    // -------------------------------------------------------------------------
-// secureBankAccountNumber
-// -------------------------------------------------------------------------
-
     @Test
     void secureBankAccountNumber_shouldReturnTenCharsByDefault() {
         Assertions.assertEquals(10, TokenGenerator.secureBankAccountNumber().length());
@@ -222,5 +218,109 @@ class TokenGeneratorTest {
     @Test
     void isValidLuhn_shouldThrowOnAlphabeticInput() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> TokenGenerator.isValidLuhn("abc"));
+    }
+
+    @Test
+    void secureBankAccountNumber_withStringPrefix_shouldReturnCorrectTotalLength() {
+        Assertions.assertEquals(10, TokenGenerator.secureBankAccountNumber("1000", 10).length());
+    }
+
+    @Test
+    void secureBankAccountNumber_withStringPrefix_shouldStartWithPrefix() {
+        Assertions.assertTrue(TokenGenerator.secureBankAccountNumber("1000", 10).startsWith("1000"));
+    }
+
+    @Test
+    void secureBankAccountNumber_withStringPrefix_shouldContainOnlyDigits() {
+        Assertions.assertTrue(TokenGenerator.secureBankAccountNumber("1000", 10).matches(NUMERIC_PATTERN));
+    }
+
+    @Test
+    void secureBankAccountNumber_withStringPrefix_shouldPassLuhnCheck() {
+        Assertions.assertTrue(TokenGenerator.isValidLuhn(TokenGenerator.secureBankAccountNumber("1000", 10)));
+    }
+
+    @Test
+    void secureBankAccountNumber_withStringPrefix_shouldPassLuhnCheckWithLongerSize() {
+        Assertions.assertTrue(TokenGenerator.isValidLuhn(TokenGenerator.secureBankAccountNumber("2000", 20)));
+    }
+
+    @Test
+    void secureBankAccountNumber_withStringPrefix_shouldThrowIfSizeLessThanEight() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> TokenGenerator.secureBankAccountNumber("12", 7));
+    }
+
+    @Test
+    void secureBankAccountNumber_withStringPrefix_shouldThrowIfSizeNotGreaterThanPrefixLength() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> TokenGenerator.secureBankAccountNumber("1000", 4));
+    }
+
+    @Test
+    void secureBankAccountNumber_withStringPrefix_shouldThrowIfPrefixIsNull() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> TokenGenerator.secureBankAccountNumber((String) null, 10));
+    }
+
+    @Test
+    void secureBankAccountNumber_withStringPrefix_shouldThrowIfPrefixIsEmpty() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> TokenGenerator.secureBankAccountNumber("", 10));
+    }
+
+    @Test
+    void secureBankAccountNumber_withStringPrefix_shouldThrowIfPrefixContainsNonDigits() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> TokenGenerator.secureBankAccountNumber("10AB", 10));
+    }
+
+    @Test
+    void secureBankAccountNumber_withLongPrefix_shouldReturnCorrectTotalLength() {
+        Assertions.assertEquals(10, TokenGenerator.secureBankAccountNumber(1000L, 10).length());
+    }
+
+    @Test
+    void secureBankAccountNumber_withLongPrefix_shouldStartWithPrefix() {
+        Assertions.assertTrue(TokenGenerator.secureBankAccountNumber(1000L, 10).startsWith("1000"));
+    }
+
+    @Test
+    void secureBankAccountNumber_withLongPrefix_shouldContainOnlyDigits() {
+        Assertions.assertTrue(TokenGenerator.secureBankAccountNumber(1000L, 10).matches(NUMERIC_PATTERN));
+    }
+
+    @Test
+    void secureBankAccountNumber_withLongPrefix_shouldPassLuhnCheck() {
+        Assertions.assertTrue(TokenGenerator.isValidLuhn(TokenGenerator.secureBankAccountNumber(1000L, 10)));
+    }
+
+    @Test
+    void secureBankAccountNumber_withLongPrefix_shouldPassLuhnCheckWithLongerSize() {
+        Assertions.assertTrue(TokenGenerator.isValidLuhn(TokenGenerator.secureBankAccountNumber(2000L, 20)));
+    }
+
+    @Test
+    void secureBankAccountNumber_withLongPrefix_shouldThrowIfSizeLessThanEight() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> TokenGenerator.secureBankAccountNumber(12L, 7));
+    }
+
+    @Test
+    void secureBankAccountNumber_withLongPrefix_shouldThrowIfSizeNotGreaterThanPrefixLength() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> TokenGenerator.secureBankAccountNumber(1000L, 4));
+    }
+
+    @Test
+    void secureBankAccountNumber_withLongPrefix_shouldThrowIfPrefixIsNotPositive() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> TokenGenerator.secureBankAccountNumber(0L, 10));
+    }
+
+    @Test
+    void secureBankAccountNumber_withLongPrefix_shouldThrowIfPrefixIsNegative() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> TokenGenerator.secureBankAccountNumber(-1000L, 10));
     }
 }
